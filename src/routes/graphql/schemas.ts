@@ -53,14 +53,6 @@ export const PostTypes = new GraphQLObjectType({
         authorId: { type: UUIDType },
     },
 });
-export const UserTypes = new GraphQLObjectType({
-    name: 'users',
-    fields: {
-        id: { type: UUIDType },
-        name: { type: GraphQLString },
-        balance: { type: GraphQLFloat },
-    },
-});
 export const ProfileTypes = new GraphQLObjectType({
     name: 'profiles',
     fields: {
@@ -69,5 +61,14 @@ export const ProfileTypes = new GraphQLObjectType({
         yearOfBirth: { type: GraphQLInt },
         userId: { type: UUIDType },
         memberTypeId: { type: UUIDType },
+    },
+});
+export const UserTypes = new GraphQLObjectType({
+    name: 'users',
+    fields: {
+        id: { type: UUIDType },
+        name: { type: GraphQLString },
+        balance: { type: GraphQLFloat },
+        profile: {type: ProfileTypes}
     },
 });
