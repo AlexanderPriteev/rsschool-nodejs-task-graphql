@@ -2,7 +2,7 @@ import { Type } from '@fastify/type-provider-typebox';
 import {
     GraphQLBoolean,
     GraphQLEnumType,
-    GraphQLFloat,
+    GraphQLFloat, GraphQLInputObjectType,
     GraphQLInt,
     GraphQLObjectType,
     GraphQLString
@@ -30,7 +30,7 @@ export const createGqlResponseSchema = {
   ),
 };
 
-
+//GET
 export const MemberTypeId = new GraphQLEnumType({
     name: 'MemberTypeId',
     values: {
@@ -62,7 +62,7 @@ export const ProfileTypes = new GraphQLObjectType({
         isMale: { type: GraphQLBoolean },
         yearOfBirth: { type: GraphQLInt },
         userId: { type: UUIDType },
-        memberTypeId: { type: UUIDType },
+        memberTypeId: { type: MemberTypeId },
         memberType: {
             type: MemberTypes,
             resolve: (parent, _, context: IContext) => {
@@ -77,7 +77,6 @@ export const ProfileTypes = new GraphQLObjectType({
         }
     },
 });
-
 export const UserTypes = new GraphQLObjectType({
     name: 'users',
     fields: () => ({
@@ -134,4 +133,30 @@ export const UserTypes = new GraphQLObjectType({
             }
         },
     }),
+});
+
+//POST
+export const CreatePostInputType = new GraphQLInputObjectType({
+    name: 'CreatePostInput',
+    fields: {
+        title: { type: GraphQLString },
+        content: { type: GraphQLString },
+        authorId: { type: UUIDType },
+    },
+});
+export const CreateUserInputType = new GraphQLInputObjectType({
+    name: 'CreateUserInput',
+    fields: {
+        name: { type: GraphQLString },
+        balance: { type: GraphQLFloat },
+    },
+});
+export const CreateProfileInputType = new GraphQLInputObjectType({
+    name: 'CreateProfileInput',
+    fields: {
+        isMale: { type: GraphQLBoolean },
+        yearOfBirth: { type: GraphQLInt },
+        userId: { type: UUIDType },
+        memberTypeId: { type: MemberTypeId },
+    },
 });
