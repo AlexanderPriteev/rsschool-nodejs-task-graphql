@@ -54,7 +54,7 @@ export const rootQuery = new GraphQLObjectType({
             args: {
                 id: { type: new GraphQLNonNull(UUIDType) }
             },
-            resolve: async (_, { id }, context: IContext) => {
+            resolve: (_, { id }, context: IContext) => {
                 return  context.prisma.profile.findUnique({ where: { id } })
             }
         },

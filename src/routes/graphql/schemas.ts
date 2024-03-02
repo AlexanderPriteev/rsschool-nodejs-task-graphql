@@ -8,6 +8,8 @@ import {
     GraphQLString
 } from "graphql/index.js";
 import {UUIDType} from "./types/uuid.js";
+import {GraphQLList} from "graphql";
+import {IContext} from "./types/interfaces.js";
 
 export const gqlResponseSchema = Type.Partial(
   Type.Object({
@@ -61,6 +63,18 @@ export const ProfileTypes = new GraphQLObjectType({
         yearOfBirth: { type: GraphQLInt },
         userId: { type: UUIDType },
         memberTypeId: { type: UUIDType },
+        memberType: {
+            type: MemberTypes,
+            resolve: (parent, _, context: IContext) => {
+                try {
+                    return context.prisma.memberType.findUnique({
+                        where: { id: parent.memberTypeId }
+                    });
+                } catch {
+                    return null;
+                }
+            }
+        }
     },
 });
 export const UserTypes = new GraphQLObjectType({
@@ -69,6 +83,30 @@ export const UserTypes = new GraphQLObjectType({
         id: { type: UUIDType },
         name: { type: GraphQLString },
         balance: { type: GraphQLFloat },
-        profile: {type: ProfileTypes}
+
+        profile: {
+            type: ProfileTypes,
+            resolve: (parent, _, context: IContext) => {
+                try {
+                    return context.prisma.profile.findUnique({
+                        where: { userId: parent.id }
+                    });
+                } catch {
+                    return null;
+                }
+            }
+        },
+        posts: {
+            type: new GraphQLList(PostTypes),
+            resolve: (parent, _, context: IContext) => {
+                try {
+                    return context.prisma.post.findMany({
+                        where: { authorId: parent.id }
+                    });
+                } catch {
+                    return [];
+                }
+            }
+        }
     },
 });
