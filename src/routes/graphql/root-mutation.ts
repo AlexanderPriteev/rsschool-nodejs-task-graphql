@@ -109,10 +109,16 @@ export const rootMutation = new GraphQLObjectType({
                 id: { type: new  GraphQLNonNull(UUIDType) },
                 dto: { type: new GraphQLNonNull(ChangeProfileInputType) },
             },
-            resolve: (_, { id, dto }, context: IContext) => context.prisma.profile.update({
-                where: { id: id },
-                data: dto
-            })
+            resolve: async (_, { id, dto }, context: IContext) => {
+                try {
+                    return await context.prisma.profile.update({
+                        where: { id: id },
+                        data: dto
+                    })
+                } catch {
+                    throw new Error(`Field \"userId\" is not defined by type \"ChangeProfileInput\"`);
+                }
+            }
         }
     }
 })
