@@ -119,6 +119,49 @@ export const rootMutation = new GraphQLObjectType({
                     throw new Error(`Field \"userId\" is not defined by type \"ChangeProfileInput\"`);
                 }
             }
-        }
+        },
+
+        subscribeTo: {
+            type: UserTypes,
+            args: {
+                userId: { type: new  GraphQLNonNull(UUIDType) },
+                authorId: { type: new GraphQLNonNull(UUIDType) },
+            },
+            resolve: async (_, { userId, authorId }, context: IContext) => context.prisma.user.update({
+                where: {
+                    id: userId,
+                },
+                data: {
+                    userSubscribedTo: {
+                        create: {
+                            authorId: authorId,
+                        },
+                    },
+                },
+            })
+        },
+        unsubscribeFrom: {
+            type: GraphQLBoolean,
+            args: {
+                userId: { type: new  GraphQLNonNull(UUIDType) },
+                authorId: { type: new GraphQLNonNull(UUIDType) },
+            },
+            resolve: async (_, { userId, authorId }, context: IContext) => {
+                try {
+                    await context.prisma.subscribersOnAuthors.delete({
+                        where: {
+                            subscriberId_authorId: {
+                                subscriberId: userId,
+                                authorId: authorId,
+                            },
+                        },
+                    })
+                    return true;
+                } catch {
+                    return false;
+                }
+            }
+        },
+
     }
 })
