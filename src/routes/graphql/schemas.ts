@@ -77,9 +77,10 @@ export const ProfileTypes = new GraphQLObjectType({
         }
     },
 });
+
 export const UserTypes = new GraphQLObjectType({
     name: 'users',
-    fields: {
+    fields: () => ({
         id: { type: UUIDType },
         name: { type: GraphQLString },
         balance: { type: GraphQLFloat },
@@ -107,6 +108,30 @@ export const UserTypes = new GraphQLObjectType({
                     return [];
                 }
             }
-        }
-    },
+        },
+        userSubscribedTo: {
+            type: new GraphQLList(UserTypes),
+            resolve: (parent, _, context: IContext) => {
+                try {
+                    return  context.prisma.user.findMany({
+                        where: { subscribedToUser: { some: { subscriberId: parent.id } } }
+                    });
+                } catch (error) {
+                    return [];
+                }
+            }
+        },
+        subscribedToUser: {
+            type: new GraphQLList(UserTypes),
+            resolve: (parent, _, context: IContext) => {
+                try {
+                    return  context.prisma.user.findMany({
+                        where: { userSubscribedTo: {some: {authorId: parent.id }} }}
+                    );
+                } catch (error) {
+                    return [];
+                }
+            }
+        },
+    }),
 });
