@@ -1,6 +1,8 @@
-import { GraphQLObjectType } from "graphql/index.js";
+import {GraphQLBoolean, GraphQLObjectType} from "graphql/index.js";
 import { GraphQLNonNull } from "graphql";
 import {
+    ChangePostInputType,
+    ChangeProfileInputType, ChangeUserInputType,
     CreatePostInputType,
     CreateProfileInputType,
     CreateUserInputType,
@@ -9,6 +11,7 @@ import {
     UserTypes
 } from "./schemas.js";
 import {IContext} from "./types/interfaces.js";
+import {UUIDType} from "./types/uuid.js";
 
 export const rootMutation = new GraphQLObjectType({
     name: 'mutation',
@@ -20,6 +23,32 @@ export const rootMutation = new GraphQLObjectType({
             },
             resolve: (_, { dto }, context: IContext) => context.prisma.post.create({ data: dto })
         },
+        deletePost: {
+            type: GraphQLBoolean,
+            args: {
+                id: { type: new  GraphQLNonNull(UUIDType) },
+            },
+            resolve: async (_, { id }, context: IContext) => {
+                try {
+                    await context.prisma.post.delete({ where: { id: id } });
+                    return true;
+                } catch {
+                    return false;
+                }
+            }
+        },
+        changePost: {
+            type: PostTypes,
+            args: {
+                id: { type: new  GraphQLNonNull(UUIDType) },
+                dto: { type: new GraphQLNonNull(ChangePostInputType) },
+            },
+            resolve: (_, { id, dto }, context: IContext) => context.prisma.post.update({
+                where: { id: id },
+                data: dto
+            })
+        },
+
         createUser: {
             type: UserTypes,
             args: {
@@ -27,12 +56,63 @@ export const rootMutation = new GraphQLObjectType({
             },
             resolve: (_, { dto }, context: IContext) => context.prisma.user.create({ data: dto })
         },
+        deleteUser: {
+            type: GraphQLBoolean,
+            args: {
+                id: { type: new  GraphQLNonNull(UUIDType) },
+            },
+            resolve: async (_, { id }, context: IContext) => {
+                try {
+                    await context.prisma.user.delete({ where: { id: id } })
+                    return true;
+                } catch {
+                    return false;
+                }
+            }
+        },
+        changeUser: {
+            type: UserTypes,
+            args: {
+                id: { type: new  GraphQLNonNull(UUIDType) },
+                dto: { type: new GraphQLNonNull(ChangeUserInputType) },
+            },
+            resolve: (_, { id, dto }, context: IContext) => context.prisma.user.update({
+                where: { id: id },
+                data: dto
+            })
+        },
+
         createProfile: {
             type: ProfileTypes,
             args: {
                 dto: { type: new GraphQLNonNull(CreateProfileInputType) },
             },
             resolve: (_, { dto }, context: IContext) => context.prisma.profile.create({ data: dto })
+        },
+        deleteProfile: {
+            type: GraphQLBoolean,
+            args: {
+                id: { type: new  GraphQLNonNull(UUIDType) },
+            },
+            resolve: async (_, { id }, context: IContext) => {
+                try {
+                    await context.prisma.profile.delete({ where: { id: id } })
+                    return true
+                } catch {
+                    return false;
+                }
+            }
+        },
+        changeProfile: {
+            type: ProfileTypes,
+            args: {
+                id: { type: new  GraphQLNonNull(UUIDType) },
+                dto: { type: new GraphQLNonNull(ChangeProfileInputType) },
+            },
+            resolve: (_, { id, dto }, context: IContext) => context.prisma.profile.update({
+                where: { id: id },
+                data: dto
+            })
         }
     }
 })
