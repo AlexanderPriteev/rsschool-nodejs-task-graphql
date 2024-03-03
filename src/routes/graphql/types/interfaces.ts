@@ -1,9 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import DataLoader from 'dataloader';
 
-export type TLoaderCreator<T> = (
-  prisma: PrismaClient,
-) => DataLoader<string, T>;
+export type TLoaderCreator<T> = (prisma: PrismaClient) => DataLoader<string, T>;
 
 export interface IContext {
   prisma: PrismaClient;

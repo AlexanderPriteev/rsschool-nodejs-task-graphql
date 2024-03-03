@@ -1,20 +1,16 @@
 import { GraphQLBoolean, GraphQLObjectType } from 'graphql/index.js';
 import { GraphQLNonNull } from 'graphql';
+import { IContext } from '../types/interfaces.js';
+import { UUIDType } from '../types/uuid.js';
+import { ChangeUserInputType, CreateUserInputType, UserTypes } from '../schemas/users.js';
+import { ChangePostInputType, CreatePostInputType, PostTypes } from '../schemas/posts.js';
 import {
-  ChangePostInputType,
   ChangeProfileInputType,
-  ChangeUserInputType,
-  CreatePostInputType,
   CreateProfileInputType,
-  CreateUserInputType,
-  PostTypes,
   ProfileTypes,
-  UserTypes,
-} from './schemas.js';
-import { IContext } from './types/interfaces.js';
-import { UUIDType } from './types/uuid.js';
+} from '../schemas/profiles.js';
 
-export const rootMutation = new GraphQLObjectType({
+export const mutations = new GraphQLObjectType({
   name: 'mutation',
   fields: {
     createPost: {

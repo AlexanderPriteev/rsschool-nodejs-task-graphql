@@ -1,20 +1,17 @@
 import { GraphQLList, GraphQLNonNull, GraphQLObjectType } from 'graphql/index.js';
-import { UUIDType } from './types/uuid.js';
-import {
-  MemberTypeId,
-  MemberTypes,
-  PostTypes,
-  ProfileTypes,
-  UserTypes,
-} from './schemas.js';
-import { IContext } from './types/interfaces.js';
+import { UUIDType } from '../types/uuid.js';
+import { IContext } from '../types/interfaces.js';
 import {
   parseResolveInfo,
   ResolveTree,
   simplifyParsedResolveInfoFragmentWithType,
 } from 'graphql-parse-resolve-info';
+import { UserTypes } from '../schemas/users.js';
+import { MemberTypeId, MemberTypes } from '../schemas/member-types.js';
+import { PostTypes } from '../schemas/posts.js';
+import { ProfileTypes } from '../schemas/profiles.js';
 
-export const rootQuery = new GraphQLObjectType({
+export const queries = new GraphQLObjectType({
   name: 'query',
   fields: {
     users: {

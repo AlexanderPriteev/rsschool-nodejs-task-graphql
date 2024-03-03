@@ -1,14 +1,14 @@
 import { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
 import { createGqlResponseSchema, gqlResponseSchema } from './schemas.js';
 import { graphql, GraphQLSchema, parse, validate } from 'graphql';
-import { rootQuery } from './root-query.js';
-import { rootMutation } from './root-mutation.js';
+import { queries } from './modules/queries.js';
+import { mutations } from './modules/mutations.js';
 import depthLimit from 'graphql-depth-limit';
-import { createLoaders } from './loaders.js';
+import { createLoaders } from './modules/loaders.js';
 
 const schema = new GraphQLSchema({
-  query: rootQuery,
-  mutation: rootMutation,
+  query: queries,
+  mutation: mutations,
 });
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify) => {

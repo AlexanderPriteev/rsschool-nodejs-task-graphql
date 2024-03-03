@@ -1,6 +1,6 @@
 import DataLoader from 'dataloader';
 import { PrismaClient } from '@prisma/client';
-import { IContext } from './types/interfaces.js';
+import { IContext } from '../types/interfaces.js';
 
 const membersLoader = (prisma: PrismaClient) =>
   new DataLoader(async (keys) => {
