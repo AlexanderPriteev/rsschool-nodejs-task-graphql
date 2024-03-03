@@ -95,7 +95,7 @@ export const UserTypes = new GraphQLObjectType({
             type: new GraphQLList(UserTypes),
             resolve: async ({id}, _, context: IContext) => {
                 const cache = context.loaders.cache;
-                if (cache) {
+                if (cache.size) {
                     const thisUser = cache.get(id);
                     return thisUser && thisUser.userSubscribedTo || [];
                 }
@@ -106,7 +106,7 @@ export const UserTypes = new GraphQLObjectType({
             type: new GraphQLList(UserTypes),
             resolve: async ({id}, _, context: IContext) => {
                 let cache = context.loaders.cache;
-                if (cache) {
+                if (cache.size) {
                     const thisUser = cache.get(id);
                     return thisUser && thisUser.subscribedToUser;
                 }
